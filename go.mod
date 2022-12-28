@@ -252,7 +252,7 @@ require (
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-getter v1.5.3 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
-	github.com/hashicorp/go-retryablehttp v0.7.1 // indirect
+	github.com/hashicorp/go-retryablehttp v0.7.1
 	github.com/hashicorp/go-rootcerts v1.0.0 // indirect
 	github.com/hashicorp/go-safetemp v1.0.0 // indirect
 	github.com/hashicorp/go-sockaddr v1.0.0 // indirect
@@ -375,8 +375,19 @@ require (
 
 require (
 	github.com/aws/aws-sdk-go-v2/service/medialive v1.24.2
+	github.com/confluentinc/ccloud-sdk-go-v2/apikeys v0.4.0
+	github.com/confluentinc/ccloud-sdk-go-v2/cmk v0.6.0
+	github.com/confluentinc/ccloud-sdk-go-v2/connect v0.3.0
 	github.com/confluentinc/ccloud-sdk-go-v2/iam v0.10.0
+	github.com/confluentinc/ccloud-sdk-go-v2/identity-provider v0.2.0
+	github.com/confluentinc/ccloud-sdk-go-v2/kafka-quotas v0.4.0
 	github.com/confluentinc/ccloud-sdk-go-v2/kafkarest v0.12.0
+	github.com/confluentinc/ccloud-sdk-go-v2/ksql v0.5.0
+	github.com/confluentinc/ccloud-sdk-go-v2/mds v0.4.0
+	github.com/confluentinc/ccloud-sdk-go-v2/networking v0.4.0
+	github.com/confluentinc/ccloud-sdk-go-v2/org v0.5.0
+	github.com/confluentinc/ccloud-sdk-go-v2/schema-registry v0.1.0
+	github.com/confluentinc/ccloud-sdk-go-v2/srcm v0.2.0
 	github.com/opalsecurity/opal-go v1.0.9
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/as v1.0.392
 	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/cbs v1.0.392
