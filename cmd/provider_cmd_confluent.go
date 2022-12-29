@@ -28,6 +28,7 @@ func newCmdConfluentImporter(options ImportOptions) *cobra.Command {
 	cmd.PersistentFlags().StringVarP(&kafkaApiKey, "kafka-api-key", "", "", "YOUR_KAFKA_API_KEY or env param KAFKA_API_KEY")
 	cmd.PersistentFlags().StringVarP(&kafkaApiSecret, "kafka-api-secret", "", "", "YOUR_KAFKA_API_SECRET or env param KAFKA_API_SECRET")
 	cmd.PersistentFlags().StringVarP(&kafkaRestEndpoint, "kafka-rest-endpoint", "", "", "YOUR_KAFKA_REST_ENDPOINT or env param KAFKA_REST_ENDPOINT")
+	cmd.PersistentFlags().StringVarP(&maxRetries, "max-retries", "", "", "YOUR_MAX_RETRIES or env param MAX_RETRIES")
 	return cmd
 }
 

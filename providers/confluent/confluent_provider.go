@@ -72,23 +72,27 @@ func (p *ConfluentProvider) GetConfig() cty.Value {
 		"kafka_api_key":       cty.StringVal(p.kafkaApiKey),
 		"kafka_api_secret":    cty.StringVal(p.kafkaApiSecret),
 		"kafka_rest_endpoint": cty.StringVal(p.kafkaRestEndpoint),
-		"max_retries":         cty.NumberIntVal(int64(p.maxRetries)),
+		//"max_retries":         cty.NumberIntVal(int64(p.maxRetries)),
 	})
 }
 
 func (p *ConfluentProvider) GetSupportedService() map[string]terraformutils.ServiceGenerator {
 	return map[string]terraformutils.ServiceGenerator{
-		"kafka_topic":     &KafkaTopicGenerator{},
-		"kafka_acl":       &KafkaACLGenerator{},
-		"kafka_cluster":   &KafkaClusterGenerator{},
-		"role_binding":    &RoleBindinGenerator{},
-		"service_account": &ServiceAccountGenerator{},
-		"api_key":         &ApiKeyGenerator{},
+		"confluent_kafka_topic":     &KafkaTopicGenerator{},
+		"confluent_kafka_acl":       &KafkaACLGenerator{},
+		"confluent_kafka_cluster":   &KafkaClusterGenerator{},
+		"confluent_role_binding":    &RoleBindinGenerator{},
+		"confluent_service_account": &ServiceAccountGenerator{},
+		"confluent_api_key":         &ApiKeyGenerator{},
 	}
 }
 
 func (p *ConfluentProvider) GetName() string {
 	return "confluent"
+}
+
+func (p *ConfluentProvider) GetSource() string {
+	return "confluentinc/confluent"
 }
 
 func (p *ConfluentProvider) GetResourceConnections() map[string]map[string][]string {
@@ -105,13 +109,13 @@ func (p *ConfluentProvider) InitService(serviceName string, verbose bool) error 
 	p.Service.SetVerbose(verbose)
 	p.Service.SetProviderName(p.GetName())
 	p.Service.SetArgs(map[string]interface{}{
-		"cloud_api_key":       p.cloudApiKey,
-		"cloud_api_secret":    p.cloudApiSecret,
+		"cloud-api-key":       p.cloudApiKey,
+		"cloud-api-secret":    p.cloudApiSecret,
 		"endpoint":            p.endpoint,
-		"kafka_api_key":       p.kafkaApiKey,
-		"kafka_api_secret":    p.kafkaApiSecret,
-		"kafka_rest_endpoint": p.kafkaRestEndpoint,
-		"max_retries":         p.maxRetries,
+		"kafka-api-key":       p.kafkaApiKey,
+		"kafka-api-secret":    p.kafkaApiSecret,
+		"kafka-rest-endpoint": p.kafkaRestEndpoint,
+		"max-retries":         p.maxRetries,
 	})
 	return nil
 }

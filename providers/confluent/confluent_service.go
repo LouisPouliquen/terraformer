@@ -1,6 +1,8 @@
 package confluent
 
 import (
+	"context"
+	"fmt"
 	"github.com/GoogleCloudPlatform/terraformer/terraformutils"
 	apikeys "github.com/confluentinc/ccloud-sdk-go-v2/apikeys/v2"
 	cmk "github.com/confluentinc/ccloud-sdk-go-v2/cmk/v2"
@@ -16,6 +18,9 @@ import (
 	org "github.com/confluentinc/ccloud-sdk-go-v2/org/v2"
 	schemaregistry "github.com/confluentinc/ccloud-sdk-go-v2/schema-registry/v1"
 	srcm "github.com/confluentinc/ccloud-sdk-go-v2/srcm/v2"
+	"github.com/hashicorp/terraform-plugin-log/tflog"
+	"log"
+	"net/url"
 )
 
 type ConfluentService struct {
@@ -43,7 +48,7 @@ type Client struct {
 func (s ConfluentService) createClient() *Client {
 
 	endpoint := s.Args["endpoint"].(string)
-	maxRetries := s.Args["max_retries"].(int)
+	maxRetries := s.Args["max-retries"].(int)
 
 	apiKeysCfg := apikeys.NewConfiguration()
 	cmkCfg := cmk.NewConfiguration()
@@ -122,4 +127,55 @@ func (s ConfluentService) createClient() *Client {
 		quotasClient:         quotas.NewAPIClient(quotasCfg),
 		srcmClient:           srcm.NewAPIClient(srcmCfg),
 	}
+}
+
+func (s ConfluentService) ClusterApiContext(ctx context.Context) context.Context {
+	kafkaApiKey := s.Args["kafka-api-key"].(string)
+	kafkaApiSecret := s.Args["kafka-api-secret"].(string)
+	if kafkaApiKey != "" && kafkaApiSecret != "" {
+		return context.WithValue(context.Background(), kafkarestv3.ContextBasicAuth, kafkarestv3.BasicAuth{
+			UserName: kafkaApiKey,
+			Password: kafkaApiSecret,
+		})
+	}
+	log.Println("Could not find Kafka API Key")
+	return ctx
+}
+
+func (s ConfluentService) ApiKeysApiContext(ctx context.Context) context.Context {
+	cloudApiKey := s.Args["cloud-api-key"].(string)
+	cloudApiSecret := s.Args["cloud-api-secret"].(string)
+	if cloudApiKey != "" && cloudApiSecret != "" {
+		return context.WithValue(context.Background(), apikeys.ContextBasicAuth, apikeys.BasicAuth{
+			UserName: cloudApiKey,
+			Password: cloudApiSecret,
+		})
+	}
+	tflog.Warn(ctx, "Could not find Confluent Cloud API Key")
+	return ctx
+}
+
+func (s ConfluentService) iamApiContext(ctx context.Context) context.Context {
+	cloudApiKey := s.Args["cloud-api-key"].(string)
+	cloudApiSecret := s.Args["cloud-api-secret"].(string)
+	if cloudApiKey != "" && cloudApiSecret != "" {
+		return context.WithValue(context.Background(), iam.ContextBasicAuth, iam.BasicAuth{
+			UserName: cloudApiKey,
+			Password: cloudApiSecret,
+		})
+	}
+	tflog.Warn(ctx, "Could not find Confluent Cloud API Key")
+	return ctx
+}
+
+func extractPageToken(nextPageUrlString string) (string, error) {
+	nextPageUrl, err := url.Parse(nextPageUrlString)
+	if err != nil {
+		return "", fmt.Errorf("could not parse %q into URL, %s", nextPageUrlString, err)
+	}
+	pageToken := nextPageUrl.Query().Get(pageTokenQueryParameter)
+	if pageToken == "" {
+		return "", fmt.Errorf("could not parse the value for %q query parameter from %q", pageTokenQueryParameter, nextPageUrlString)
+	}
+	return pageToken, nil
 }
